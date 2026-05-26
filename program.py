@@ -16,6 +16,7 @@ def create_socket():
         global s
         host = ''
         port = 9999
+        print('Creating socket')
         s = socket.socket()
     except socket.error as msg:
         print('Socket creation error: ' + str(msg))
@@ -47,14 +48,16 @@ def send_commands(conn):
     while True:
         cmd = input()
         if cmd == 'quit':
-            conn.send(str.encode(cmd))
+            #conn.send(str.encode(cmd))
+            conn.send(rsa.encrypt(cmd))
             client_response = str(conn.recv(1024), "utf-8")
             print(client_response)
             conn.close()
             s.close()
             sys.exit()
         if len(str.encode(cmd)) > 0:
-            conn.send(str.encode(cmd))
+            #conn.send(str.encode(cmd))
+            conn.send(rsa.encrypt(cmd))
             client_response = str(conn.recv(1024), "utf-8")
             print(client_response)
 
