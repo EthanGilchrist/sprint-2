@@ -1,5 +1,6 @@
 # Simple encrypted messaging shell
 
+WARNING! This program assumes that the receiver will have a private key, but I haven't automated key creation, so this software is currently unusable except to me.
 Allows one person (Alice) to send messages encrypted with 2048-bit RSA to another person (Bob), so long as Bob knows Alice's IP address.
 
 ## Instructions for Build and Use
