@@ -2,6 +2,7 @@
 import socket
 import os
 import subprocess
+import rsa
 
 s = socket.socket()
 # ipconfig -> Wireless LAN adapter Wi-Fi -> IPv4 Address
@@ -18,24 +19,28 @@ else:
         f.write(host)
 if host == '':
     print('File empty. Using default value. This probably won\'t work.')
-    host = '10.49.176.22'
+    host = 'localhost'
 else:
     print('Loaded address ' + host + ' from file.')
 port = 9999
 
 s.connect((host, port))
 
-while True:
-    data = s.recv(1024)
-    if data[:2].decode("utf-8") == 'cd':
-        os.chdir(data[3:].decode("utf-8"))
+data = s.recv(1024)
+while data.decode("utf-8") != 'quit':
+    # if data[:2].decode("utf-8") == 'cd':
+    #     os.chdir(data[3:].decode("utf-8"))
 
     if (len(data) > 0):
-        cmd = subprocess.Popen(data[:].decode("utf-8"),  # 'foo'[] -> syntax error, 'foo'[:] -> 'foo'
-            shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
-        output_byte = cmd.stdout.read() + cmd.stderr.read()
-        output_str = str(output_byte, "utf-8")
-        currentWD = os.getcwd() + "> "
-        s.send(str.encode(output_str + currentWD))
-       #s.send(output_byte) #is surely also viable?
-        print(output_str)
+        with open("messages.txt", "a") as f:
+            f.write(data.decode("utf-8") + '\n')
+        s.send(str.encode('Received'))
+    data = s.recv(1024)
+    #     cmd = subprocess.Popen(data[:].decode("utf-8"),  # 'foo'[] -> syntax error, 'foo'[:] -> 'foo'
+    #         shell = True, stdout = subprocess.PIPE, stdin = subprocess.PIPE, stderr = subprocess.PIPE)
+    #     output_byte = cmd.stdout.read() + cmd.stderr.read()
+    #     output_str = str(output_byte, "utf-8")
+    #     currentWD = os.getcwd() + "> "
+    #     s.send(str.encode(output_str + currentWD))
+    #    #s.send(output_byte) #is surely also viable?
+    #     print(output_str)

