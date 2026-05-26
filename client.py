@@ -27,10 +27,7 @@ port = 9999
 s.connect((host, port))
 
 #data = s.recv(1024)
-rawData = s.recv(1024)
-for byte in rawData:
-    print(str(byte) + ' ', end='')
-data = rsa.decrypt(rawData)
+data = rsa.decrypt(s.recv(1024))
 #while data.decode("utf-8") != 'quit':
 while data != 'quit':
     if (len(data) > 0):
